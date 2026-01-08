@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <copyjob.c>
+#include <c-copy-headers.h>
 
 #define MAX_JOBS 1000
 

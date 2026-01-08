@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <jobqueue.c>
+#include <c-copy-headers.h>
 //#include <pthread.h>
 
 int main(int argc, char *argv[])
@@ -10,4 +10,6 @@ int main(int argc, char *argv[])
 
 int CreateJob()
 {
+    struct CopyJob job = {"", "", 0};
+    return 0;
 }
