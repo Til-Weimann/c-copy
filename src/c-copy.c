@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
         printf("Error: Not enough arguments supplied");
         return 1;
     }
-    // todo: read paths, check if exist
+    // todo: read paths, check if exist + dirs
 
     int threads = 4;
     if (argc > 3)
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 
     return 0;
 
-    // explore src dir
+    ExploreDir();
 
 
     // create multiple threads
@@ -39,6 +39,13 @@ int main(int argc, char *argv[])
 
 
     // maybe also update progress percentage whenever a job is finished
+}
+
+int ExploreDir()
+{
+    // Recursively go through source directory
+    // Create jobs and insert them into the queue
+    // Maybe also already create folders in the dest dir
 }
 
 int CreateJob()
