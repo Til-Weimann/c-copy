@@ -5,7 +5,7 @@
 #define MAX_JOBS 1000
 
 typedef struct {
-    CopyJob* items[MAX_JOBS];
+    CopyJob *jobs[MAX_JOBS];
     int start;
     int end;
 } JobQueue;
@@ -32,15 +32,16 @@ void Enqueue(JobQueue* jq, CopyJob* job)
         printf("Job Queue is full\n");
         return;
     }
-    jq->items[jq->end] = job;
+    jq->jobs[jq->end] = job;
     jq->end++;
 }
 
-void Dequeue(JobQueue* jq)
+void Take(JobQueue* jq)
 {
     if (isEmpty(jq)) {
         printf("Queue is empty\n");
         return;
     }
+    // Implement returning job pointer
     jq->start++;
 }
