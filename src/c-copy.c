@@ -10,6 +10,6 @@ int main(int argc, char *argv[])
 
 int CreateJob()
 {
-    struct CopyJob job = {"", "", 0};
+    CopyJob job = {"", "", 0};
     return 0;
 }

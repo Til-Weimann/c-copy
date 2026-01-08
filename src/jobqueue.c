@@ -10,38 +10,38 @@ typedef struct {
     int end;
 } JobQueue;
 
-void InitQueue(JobQueue* jq)
+void InitQueue(JobQueue *jq)
 {
     jq->start = -1;
     jq->end = 0;
 }
 
-bool IsEmpty(JobQueue* jq)
+bool IsEmpty(JobQueue *jq)
 {
     return (jq->start + 1 == jq->end);
 }
 
-bool IsFull(JobQueue* jq)
+bool IsFull(JobQueue *jq)
 {
     return (jq->end == MAX_JOBS);
 }
 
-void Enqueue(JobQueue* jq, CopyJob* job)
+bool Enqueue(JobQueue *jq, CopyJob *job)
 {
     if (IsFull(jq)) {
         printf("Job Queue is full\n");
-        return;
+        return false;
     }
     jq->jobs[jq->end] = job;
     jq->end++;
+    return true;
 }
 
-void Take(JobQueue* jq)
+CopyJob *Claim(JobQueue *jq)
 {
     if (isEmpty(jq)) {
         printf("Queue is empty\n");
-        return;
+        return NULL;
     }
-    // Implement returning job pointer
-    jq->start++;
+    return jq->jobs[++jq->start];
 }
