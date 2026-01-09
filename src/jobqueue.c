@@ -2,14 +2,6 @@
 #include <stdbool.h>
 #include <c-copy-headers.h>
 
-#define MAX_JOBS 1000
-
-typedef struct {
-    CopyJob *jobs[MAX_JOBS];
-    int start;
-    int end;
-} JobQueue;
-
 void InitQueue(JobQueue *jq)
 {
     jq->start = -1;
@@ -30,6 +22,7 @@ bool Enqueue(JobQueue *jq, CopyJob *job)
 {
     if (IsFull(jq)) {
         printf("Job Queue is full\n");
+        free(job);
         return false;
     }
     jq->jobs[jq->end] = job;
@@ -44,4 +37,5 @@ CopyJob *Claim(JobQueue *jq)
         return NULL;
     }
     return jq->jobs[++jq->start];
+    // don't forget to later free struct memory when job is done!
 }

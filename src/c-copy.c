@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <c-copy-headers.h>
+#include <stdbool.h>
 //#include <pthread.h>
 
 int main(int argc, char *argv[])
@@ -14,7 +15,10 @@ int main(int argc, char *argv[])
         printf("Error: Not enough arguments supplied");
         return 1;
     }
+
     // todo: read paths, check if exist + dirs
+    char srcPath[4096];
+    char destPath[4096];
 
     int threads = 4;
     if (argc > 3)
@@ -25,7 +29,10 @@ int main(int argc, char *argv[])
 
     return 0;
 
-    ExploreDir();
+    JobQueue jq;
+    InitQueue(&jq);
+
+    ExploreDir(&srcPath, &destPath, &jq);
 
 
     // create multiple threads
@@ -41,17 +48,25 @@ int main(int argc, char *argv[])
     // maybe also update progress percentage whenever a job is finished
 }
 
-int ExploreDir()
+void ExploreDir(char *srcPath[], char *destPath[], JobQueue *jq)
 {
     // Recursively go through source directory
-    // Create jobs and insert them into the queue
-    // Maybe also already create folders in the dest dir
+    // For every file, call CreateJob with src+dest file path and file size in bytes
+    // Maybe also already create folders in the dest dir while traversing
 }
 
-int CreateJob()
+bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq)
 {
-    CopyJob job = {"", "", 0};
-    return 0;
+    CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
+    if (job_ptr == NULL) {
+        printf("Job memory allocation failed.\n");
+        return false;
+    }
+    strcpy(job_ptr->srcPath, *jobSrc);
+    strcpy(job_ptr->destPath, *jobDest);
+    job_ptr->fileSize = size;
+
+    return Enqueue(jq, job_ptr);
 }
 
 
