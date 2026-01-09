@@ -43,9 +43,6 @@ int main(int argc, char *argv[])
         // create thread
     }
 
-
-
-    // maybe also update progress percentage whenever a job is finished
 }
 
 void ExploreDir(char *srcPath[], char *destPath[], JobQueue *jq)
@@ -70,7 +67,10 @@ bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq)
 }
 
 
-void* WorkerRoutine(void* arg) {
-    printf("Created a new thread");
+void* WorkerRoutine(void* arg) { // needs the queue pointer
+    printf("Created a new worker thread");
+    // Create loop that claims a new job from the queue, calls CopyFile with the job, then frees the job pointer
+    // When the job list is empty, quit
+    // Optional: After finishing a job, update some progress counter based on job file size
     return NULL;
  }
