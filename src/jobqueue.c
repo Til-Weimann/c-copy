@@ -30,7 +30,7 @@ bool Enqueue(JobQueue *jq, CopyJob *job)
     return true;
 }
 
-CopyJob *Claim(JobQueue *jq)
+CopyJob *Claim(JobQueue *jq) // needs mutex
 {
     if (isEmpty(jq)) {
         printf("Queue is empty\n");
