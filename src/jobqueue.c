@@ -9,6 +9,7 @@ void InitQueue(JobQueue *jq)
 {
     jq->start = -1;
     jq->end = 0;
+    pthread_mutex_init(&claim_mutex, NULL);
 }
 
 bool IsEmpty(JobQueue *jq)
