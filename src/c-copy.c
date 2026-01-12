@@ -78,12 +78,12 @@ void ExploreDir(char *srcPath, char *destPath, JobQueue *jq)
 
         if(S_ISREG(st.st_mode)) 
 		{
-            CreateJob(srcFullPath, jobFullPath, st.st_size, jq);
+            CreateJob(srcFullPath, destFullPath, st.st_size, jq);
         }
         else if(S_ISDIR(st.st_mode)) 
 		{
             mkdir(destFullPath, 0755);					//create dir in destination
-            ExploreDir(srcFullPath, destFullPath, q);	//copy dir's contents into destination/dir
+            ExploreDir(srcFullPath, destFullPath, jq);	//copy dir's contents into destination/dir
         }
     }
 
