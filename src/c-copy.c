@@ -8,10 +8,6 @@
 #include <pthread.h>
 
 
-#define NUM_THREADS_MAX 16
-#define NUM_THREADS_DEFAULT 4
-
-
 int main(int argc, char *argv[])
 {
     // should support arguments: source path, dest path, thread count
@@ -47,8 +43,6 @@ int main(int argc, char *argv[])
             threadCount = threadArg;
         }
     }
-
-    return 0;
 
     JobQueue jq;
     InitQueue(&jq);
@@ -121,18 +115,16 @@ bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq)
 }
 
 
-void* WorkerRoutine(void* arg) { // needs the queue pointer
+void* WorkerRoutine(void* arg) {
     JobQueue *jq_ptr = arg; 
     JobQueue jq = *jq_ptr;
-    printf("Created a new worker thread");
 
     CopyJob *job_ptr;
     while ((job_ptr = ClaimJob(jq_ptr)) != NULL)
     {
         int status = CopyFile(job_ptr);
+        free(job_ptr);
+        // Optional: Update some shared progress/failure counter based on status and job file size
     }
-    // Create loop that claims a new job from the queue, calls CopyFile with the job, then frees the job pointer
-    // When the job list is empty, quit
-    // Optional: After finishing a job, update some progress counter based on job file size
     return NULL;
- }
+}
