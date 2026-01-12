@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
     }
 
     // todo: read paths, check if exist + dirs
-    char srcPath[4096];
-    char destPath[4096];
+    char srcPath[PATH_MAX_LEN];
+    char destPath[PATH_MAX_LEN];
 
     int threadCount = NUM_THREADS_DEFAULT;
     if (argc > 3)
@@ -59,6 +59,10 @@ int main(int argc, char *argv[])
     for (int i = 0; i < threadCount; i++) {
         pthread_join(&workers[i], NULL);
     }
+
+
+    // clean up
+    pthread_mutex_destroy(&claim_mutex);
 
 }
 
@@ -100,7 +104,7 @@ void ExploreDir(char *srcPath, char *destPath, JobQueue *jq)
     closedir(dir);
 }
 
-bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq)
+bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
     if (job_ptr == NULL) {
@@ -111,7 +115,7 @@ bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq)
     strcpy(job_ptr->destPath, *jobDest);
     job_ptr->fileSize = size;
 
-    return Enqueue(*jq, job_ptr);
+    return Enqueue(jq_ptr, job_ptr);
 }
 
 

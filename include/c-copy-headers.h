@@ -1,3 +1,6 @@
+#include <stdbool.h>
+#include <pthread.h>
+
 #define MAX_JOBS 1000
 #define PATH_MAX_LEN 4096
 
@@ -16,4 +19,9 @@ typedef struct {
     int end;
 } JobQueue;
 
-int CopyFile(CopyJob *job);
+
+int CopyFile(CopyJob *job_ptr);
+
+bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr);
+CopyJob *ClaimJob(JobQueue *jq_ptr);
+pthread_mutex_t claim_mutex;

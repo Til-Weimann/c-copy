@@ -5,44 +5,43 @@
 
 pthread_mutex_t claim_mutex;
 
-void InitQueue(JobQueue *jq)
+void InitQueue(JobQueue *jq_ptr)
 {
-    jq->start = -1;
-    jq->end = 0;
+    jq_ptr->start = -1;
+    jq_ptr->end = 0;
     pthread_mutex_init(&claim_mutex, NULL);
 }
 
-bool IsEmpty(JobQueue *jq)
+bool IsEmpty(JobQueue *jq_ptr)
 {
-    return (jq->start + 1 == jq->end);
+    return (jq_ptr->start + 1 == jq_ptr->end);
 }
 
-bool IsFull(JobQueue *jq)
+bool IsFull(JobQueue *jq_ptr)
 {
-    return (jq->end == MAX_JOBS);
+    return (jq_ptr->end == MAX_JOBS);
 }
 
-bool Enqueue(JobQueue *jq, CopyJob *job)
+bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 {
-    if (IsFull(jq)) {
+    if (IsFull(jq_ptr)) {
         printf("Job Queue is full\n");
-        free(job);
+        free(job_ptr);
         return false;
     }
-    jq->jobs[jq->end] = job;
-    jq->end++;
+    jq_ptr->jobs[jq_ptr->end] = job_ptr;
+    jq_ptr->end++;
     return true;
 }
 
-CopyJob *ClaimJob(JobQueue *jq)
+CopyJob *ClaimJob(JobQueue *jq_ptr)
 {
     pthread_mutex_lock(&claim_mutex);
-    if (isEmpty(jq)) {
+    if (isEmpty(jq_ptr)) {
         printf("Queue is empty\n");
         return NULL;
     }
-    CopyJob *job = jq->jobs[++jq->start];
+    CopyJob *job_ptr = jq_ptr->jobs[++jq_ptr->start];
     pthread_mutex_unlock(&claim_mutex);
-    return job;
-    // don't forget to later free struct memory when job is done!
+    return job_ptr;
 }

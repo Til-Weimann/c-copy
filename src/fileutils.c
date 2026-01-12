@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <c-copy-headers.h>
 
-int CopyFile(CopyJob *job)
+int CopyFile(CopyJob *job_ptr)
 {
     //consulted with an ai to determine failiure points and add code to check for them.
     
-    if(job == NULL){return -1;}
+    if(job_ptr == NULL){return -1;}
 
-    FILE *src = fopen(job->srcPath, "rb");
+    FILE *src = fopen(job_ptr->srcPath, "rb");
     if(!src){return -1;}
 
-    FILE *dst = fopen(job->destPath, "wb");
+    FILE *dst = fopen(job_ptr->destPath, "wb");
     if (!dst) 
     {
         fclose(src);
@@ -44,6 +44,6 @@ int CopyFile(CopyJob *job)
     fclose(src);
     fclose(dst);
 
-    job->fileSize = totalBytes;
+    job_ptr->fileSize = totalBytes;
     return 0;
 }
