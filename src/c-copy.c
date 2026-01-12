@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <pthread.h>
 
-#define PATH_MAX_LEN 4096
+
 #define NUM_THREADS_MAX 16
 #define NUM_THREADS_DEFAULT 4
 
