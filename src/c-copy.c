@@ -5,9 +5,11 @@
 #include <string.h>
 #include <dirent.h>
 #include <sys/stat.h>
-//#include <pthread.h>
+#include <pthread.h>
 
 #define PATH_MAX_LEN 4096
+#define NUM_THREADS_MAX 16
+#define NUM_THREADS_DEFAULT 4
 
 
 int main(int argc, char *argv[])
@@ -19,7 +21,7 @@ int main(int argc, char *argv[])
 
     if (argc < 3)
     {
-        printf("Error: Not enough arguments supplied");
+        printf("Error: Not enough arguments, correct usage: c-copy sourcePath destPath threadCount\n");
         return 1;
     }
 
@@ -27,11 +29,23 @@ int main(int argc, char *argv[])
     char srcPath[4096];
     char destPath[4096];
 
-    int threads = 4;
+    int threadCount = NUM_THREADS_DEFAULT;
     if (argc > 3)
     {
-        threads = atoi(argv[3]);
-        // ensure reasonable number
+        int threadArg = atoi(argv[3]);
+        if (threadArg > NUM_THREADS_MAX)
+        {
+            printf("Warning: %d exceeds the thread limit of %d, proceeding with %d.\n", threadArg, NUM_THREADS_MAX);
+            threadCount = NUM_THREADS_MAX;
+        }
+        else if (threadArg <= 0)
+        {
+            printf("Warning: Thread number %d is invalid, proceeding with %d.\n", threadArg, NUM_THREADS_DEFAULT);
+        }
+        else
+        {
+            threadCount = threadArg;
+        }
     }
 
     return 0;
@@ -42,12 +56,10 @@ int main(int argc, char *argv[])
     ExploreDir(&srcPath, &destPath, &jq);
 
 
-    // create multiple threads
-    // pthread_t thread;
-    // pthread_create(&thread, NULL, WorkerRoutine, NULL);
+    pthread_t workers[NUM_THREADS_MAX];
 
-    for (int i = 0; i < threads; i++) {
-        // create thread
+    for (int i = 0; i < threadCount; i++) {
+        pthread_create(&workers[i], NULL, WorkerRoutine, NULL);
     }
 
 }
