@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     pthread_t workers[NUM_THREADS_MAX];
 
     for (int i = 0; i < threadCount; i++) {
-        pthread_create(&workers[i], NULL, WorkerRoutine, NULL);
+        pthread_create(&workers[i], NULL, WorkerRoutine, &jq);
     }
 
     for (int i = 0; i < threadCount; i++) {
