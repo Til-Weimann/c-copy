@@ -7,6 +7,9 @@
 #include <sys/stat.h>
 //#include <pthread.h>
 
+#define PATH_MAX_LEN 4096
+
+
 int main(int argc, char *argv[])
 {
     // should support arguments: source path, dest path, thread count
