@@ -62,7 +62,7 @@ void ExploreDir(char *srcPath, char *destPath, JobQueue *jq)
     char destFullPath[PATH_MAX_LEN];
 
     dir = opendir(srcPath);
-    if(!dir){return;}		//could return -1
+    if(!dir){return;}		//could return -1 to indicate error
 
     while ((entry = readdir(dir)) != NULL) 
     {
@@ -73,16 +73,16 @@ void ExploreDir(char *srcPath, char *destPath, JobQueue *jq)
 
 
 
-        if(stat(srcFullPath, &st) == -1){continue;}	//if file doesnt exist (anymore?), skip it.
+        if(stat(srcFullPath, &st) == -1){continue;}		//if file doesnt exist (anymore?), skip it.
 
 
         if(S_ISREG(st.st_mode)) 
-	{
-            CreateJob(srcFullPath, jobFullPath, jq);
+		{
+            CreateJob(srcFullPath, jobFullPath, st.st_size, jq);
         }
         else if(S_ISDIR(st.st_mode)) 
-	{
-            mkdir(destFullPath, 0755);			//create dir in destination
+		{
+            mkdir(destFullPath, 0755);					//create dir in destination
             ExploreDir(srcFullPath, destFullPath, q);	//copy dir's contents into destination/dir
         }
     }
