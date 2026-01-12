@@ -34,7 +34,7 @@ bool Enqueue(JobQueue *jq, CopyJob *job)
     return true;
 }
 
-CopyJob *Claim(JobQueue *jq)
+CopyJob *ClaimJob(JobQueue *jq)
 {
     pthread_mutex_lock(&claim_mutex);
     if (isEmpty(jq)) {

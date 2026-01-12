@@ -62,6 +62,10 @@ int main(int argc, char *argv[])
         pthread_create(&workers[i], NULL, WorkerRoutine, NULL);
     }
 
+    for (int i = 0; i < threadCount; i++) {
+        pthread_join(&workers[i], NULL);
+    }
+
 }
 
 void ExploreDir(char *srcPath, char *destPath, JobQueue *jq)
@@ -113,12 +117,20 @@ bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq)
     strcpy(job_ptr->destPath, *jobDest);
     job_ptr->fileSize = size;
 
-    return Enqueue(jq, job_ptr);
+    return Enqueue(*jq, job_ptr);
 }
 
 
 void* WorkerRoutine(void* arg) { // needs the queue pointer
+    JobQueue *jq_ptr = arg; 
+    JobQueue jq = *jq_ptr;
     printf("Created a new worker thread");
+
+    CopyJob *job_ptr;
+    while ((job_ptr = ClaimJob(jq_ptr)) != NULL)
+    {
+        int status = CopyFile(job_ptr);
+    }
     // Create loop that claims a new job from the queue, calls CopyFile with the job, then frees the job pointer
     // When the job list is empty, quit
     // Optional: After finishing a job, update some progress counter based on job file size
