@@ -10,14 +10,11 @@
 
 int main(int argc, char *argv[])
 {
-    // should support arguments: source path, dest path, thread count
-    for (int i = 0; i < argc; i++) {
-        printf("%s\n", argv[i]);
-    }
+    // todo: stdin pipeline integration
 
     if (argc < 3)
     {
-        printf("Error: Not enough arguments, correct usage: c-copy sourcePath destPath threadCount\n");
+        printf("Usage: %s <source_path> <dest_path> [<threadCount>]\n", argv[0]);
         return 1;
     }
 
@@ -49,7 +46,6 @@ int main(int argc, char *argv[])
 
     ExploreDir(&srcPath, &destPath, &jq);
 
-
     pthread_t workers[NUM_THREADS_MAX];
 
     for (int i = 0; i < threadCount; i++) {
@@ -61,8 +57,12 @@ int main(int argc, char *argv[])
     }
 
 
-    // clean up
+    // todo: more clean up
     pthread_mutex_destroy(&claim_mutex);
+    free(&jq);
+
+
+    // todo: stdout pipeline integration
 
 }
 
@@ -128,7 +128,7 @@ void* WorkerRoutine(void* arg) {
     {
         int status = CopyFile(job_ptr);
         free(job_ptr);
-        // Optional: Update some shared progress/failure counter based on status and job file size
+        // Optional todo: Update some shared progress/failure counter based on status and job file size
     }
     return NULL;
 }
