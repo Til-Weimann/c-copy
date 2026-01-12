@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <c-copy-headers.h>
+#include <pthread.h>
+
+pthread_mutex_t claim_mutex;
 
 void InitQueue(JobQueue *jq)
 {
@@ -30,12 +33,15 @@ bool Enqueue(JobQueue *jq, CopyJob *job)
     return true;
 }
 
-CopyJob *Claim(JobQueue *jq) // needs mutex
+CopyJob *Claim(JobQueue *jq)
 {
+    pthread_mutex_lock(&claim_mutex);
     if (isEmpty(jq)) {
         printf("Queue is empty\n");
         return NULL;
     }
-    return jq->jobs[++jq->start];
+    CopyJob *job = jq->jobs[++jq->start];
+    pthread_mutex_unlock(&claim_mutex);
+    return job;
     // don't forget to later free struct memory when job is done!
 }
