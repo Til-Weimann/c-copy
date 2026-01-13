@@ -18,9 +18,33 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // todo: read paths, check if exist + dirs
-    char srcPath[PATH_MAX_LEN];
-    char destPath[PATH_MAX_LEN];
+    y
+    char *srcPath[PATH_MAX_LEN];
+    char *destPath[PATH_MAX_LEN];
+
+	//done: read paths from arg[1] and arg[2] and check if the correlating dir exists
+	srcPath = argv[1];
+	destPath = argv[2];
+	DIR *srcdir;
+	DIR *destdir;
+	srcdir = opendir(srcPath);
+	if(!srcdir)
+	{
+		return -2;		//-2 indicates invalid source path
+	}
+	destdir = opendir(destPath);
+	if(!destdir)
+	{
+		closedir(srcPath);
+		return -3;		//-3 indicates invalid destination path
+	}
+	else
+	{
+		closedir(srcPath);
+		closedir(destPath);
+	}
+	
+	
 
     int threadCount = NUM_THREADS_DEFAULT;
     if (argc > 3)
@@ -44,7 +68,7 @@ int main(int argc, char *argv[])
     JobQueue jq;
     InitQueue(&jq);
 
-    ExploreDir(&srcPath, &destPath, &jq);
+    ExploreDir(&srcdir, &destdir, &jq);
 
     pthread_t workers[NUM_THREADS_MAX];
 
