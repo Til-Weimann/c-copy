@@ -93,19 +93,19 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
 
     while ((entry = readdir(dir_ptr)) != NULL)
     {
-        if (strlen(srcPath) + 1 + strlen(entry->d_name) >= PATH_MAX_LEN)
+        if (strlen(srcPath) + 1 + strlen(entry->d_name) > PATH_MAX_LEN)
         {
             printf("Error: An entry exceeded maximum path length!");
             continue;
         }
 
         // todo: unfuck strings
-        char *srcFullPath[PATH_MAX_LEN];
-        char *destFullPath[PATH_MAX_LEN];
+        char srcFullPath[PATH_MAX_LEN] = "";
+        char destFullPath[PATH_MAX_LEN] = "";
 
         // path construction approach assisted by ai
-        snprintf(*srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
-        snprintf(*destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
+        snprintf(srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
+        snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
 
         // if directory and not self or parent, recurse
         if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
@@ -132,8 +132,8 @@ bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_p
         printf("Job memory allocation failed.\n");
         return false;
     }
-    strcpy(job_ptr->srcPath, *jobSrc);
-    strcpy(job_ptr->destPath, *jobDest);
+    strcpy(job_ptr->srcPath, jobSrc);
+    strcpy(job_ptr->destPath, jobDest);
     job_ptr->fileSize = size;
 
     return Enqueue(jq_ptr, job_ptr);

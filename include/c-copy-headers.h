@@ -36,4 +36,4 @@ CopyJob *ClaimJob(JobQueue *jq_ptr);
 // main
 void* WorkerRoutine(void* arg);
 void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
-bool CreateJob(const char *jobSrc[], const char *jobDest[], int size, JobQueue *jq_ptr);
+bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr);
