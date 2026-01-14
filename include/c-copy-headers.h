@@ -19,6 +19,9 @@ typedef struct {
     int end;
 } JobQueue;
 
+
+// make sure to update these when changing method signatures!
+
 // fileutils
 int CopyFile(CopyJob *job_ptr);
 
@@ -31,3 +34,6 @@ bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr);
 CopyJob *ClaimJob(JobQueue *jq_ptr);
 
 // main
+void* WorkerRoutine(void* arg);
+void ExploreDir(char *srcPath, char *destPath, JobQueue *jq);
+bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq_ptr);

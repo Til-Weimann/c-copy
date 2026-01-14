@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
-#include <sys/stat.h>
 #include <pthread.h>
+#include <sys/stat.h>
 
 
 int main(int argc, char *argv[])
@@ -23,22 +23,20 @@ int main(int argc, char *argv[])
 	srcdir = opendir(argv[1]);
 	if(!srcdir)
 	{
-        // print error
-        printf("Invalid source directory: ", argv[0]);
+        printf("Invalid source directory: %s", argv[1]);
 		return -2;		//-2 indicates invalid source path
 	}
 	destdir = opendir(argv[2]);
 	if(!destdir)
 	{
-        printf("Invalid destination directory: ", argv[0]);
-		closedir(argv[1]);
+        printf("Invalid destination directory: %s", argv[2]);
+        // maybe create instead of returning?
+		closedir(srcdir);
 		return -3;		//-3 indicates invalid destination path
 	}
-	else
-	{
-		closedir(argv[1]);
-		closedir(argv[2]);
-	}
+    closedir(srcdir);
+	closedir(destdir);
+
 	
 	
 
@@ -48,7 +46,7 @@ int main(int argc, char *argv[])
         int threadArg = atoi(argv[3]);
         if (threadArg > NUM_THREADS_MAX)
         {
-            printf("Warning: %d exceeds the thread limit of %d, proceeding with %d.\n", threadArg, NUM_THREADS_MAX);
+            printf("Warning: %d exceeds the thread limit of %d, proceeding with %d.\n", threadArg, NUM_THREADS_MAX, NUM_THREADS_MAX);
             threadCount = NUM_THREADS_MAX;
         }
         else if (threadArg <= 0)
@@ -64,7 +62,7 @@ int main(int argc, char *argv[])
     JobQueue jq;
     InitQueue(&jq);
 
-    ExploreDir(&srcdir, &destdir, &jq);
+    ExploreDir(argv[1], argv[2], &jq);
 
     pthread_t workers[NUM_THREADS_MAX];
 
@@ -73,58 +71,60 @@ int main(int argc, char *argv[])
     }
 
     for (int i = 0; i < threadCount; i++) {
-        pthread_join(&workers[i], NULL);
+        pthread_join(workers[i], NULL);
     }
 
 
     // todo: more clean up
     pthread_mutex_destroy(&claim_mutex);
-    free(&jq);
-
 
     // todo: stdout pipeline integration
 
 }
 
-void ExploreDir(char *srcPath, char *destPath, JobQueue *jq)
+void ExploreDir(char *srcPath, char *destPath, JobQueue *jq_ptr)
 {
-    DIR *dir;
-    struct dirent *entry;
-    struct stat st;
-
-    char srcFullPath[PATH_MAX_LEN];
-    char destFullPath[PATH_MAX_LEN];
-
-    dir = opendir(srcPath);
-    if(!dir){return;}		//could return -1 to indicate error
-
-    while ((entry = readdir(dir)) != NULL) 
+    DIR *dir_ptr = opendir(srcPath);
+    if (dir_ptr == NULL)
     {
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0){continue;} //skip for obvious reasons
+        return;
+    }
+    struct dirent *entry = NULL;
 
-        snprintf(srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);	//path construction
-        snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);	//assisted by ai
+    while ((entry = readdir(dir_ptr)) != NULL)
+    {
+        char srcFullPath[PATH_MAX_LEN];
+        char destFullPath[PATH_MAX_LEN];
 
-
-
-        if(stat(srcFullPath, &st) == -1){continue;}		//if file doesnt exist (anymore?), skip it.
-
-
-        if(S_ISREG(st.st_mode)) 
-		{
-            CreateJob(srcFullPath, destFullPath, st.st_size, jq);
+        if (strlen(srcPath) + 1 + strlen(entry->d_name) >= PATH_MAX_LEN)
+        {
+            printf("Error: An entry exceeded maximum path length!");
+            continue;
         }
-        else if(S_ISDIR(st.st_mode)) 
-		{
-            mkdir(destFullPath, 0755);					//create dir in destination
-            ExploreDir(srcFullPath, destFullPath, jq);	//copy dir's contents into destination/dir
+
+        // path construction approach assisted by ai
+        snprintf(srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
+        snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
+
+        // if directory and not self or parent, recurse
+        if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        {
+            mkdir(destFullPath, 0755);
+            ExploreDir(&srcFullPath, &destFullPath, jq_ptr);
+        }
+        // if file, create copy job
+        else if (entry->d_type == 8)
+        {
+            struct stat st;
+            stat(srcFullPath, &st);
+            CreateJob(&srcFullPath, &destFullPath, st.st_size, jq_ptr); // todo: size
         }
     }
 
-    closedir(dir);
+    closedir(dir_ptr);
 }
 
-bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq_ptr)
+bool CreateJob(char *jobSrc, char *jobDest, int size, JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
     if (job_ptr == NULL) {
@@ -141,7 +141,6 @@ bool CreateJob(char *jobSrc[], char *jobDest[], int size, JobQueue *jq_ptr)
 
 void* WorkerRoutine(void* arg) {
     JobQueue *jq_ptr = arg; 
-    JobQueue jq = *jq_ptr;
 
     CopyJob *job_ptr;
     while ((job_ptr = ClaimJob(jq_ptr)) != NULL)
