@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     // todo: stdin pipeline integration
 
