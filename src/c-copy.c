@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
 }
 
-void ExploreDir(char *srcPath, char *destPath, JobQueue *jq_ptr)
+void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
 {
     DIR *dir_ptr = opendir(srcPath);
     if (dir_ptr == NULL)
@@ -93,38 +93,39 @@ void ExploreDir(char *srcPath, char *destPath, JobQueue *jq_ptr)
 
     while ((entry = readdir(dir_ptr)) != NULL)
     {
-        char srcFullPath[PATH_MAX_LEN];
-        char destFullPath[PATH_MAX_LEN];
-
         if (strlen(srcPath) + 1 + strlen(entry->d_name) >= PATH_MAX_LEN)
         {
             printf("Error: An entry exceeded maximum path length!");
             continue;
         }
 
+        // todo: unfuck strings
+        char *srcFullPath[PATH_MAX_LEN];
+        char *destFullPath[PATH_MAX_LEN];
+
         // path construction approach assisted by ai
-        snprintf(srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
-        snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
+        snprintf(*srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
+        snprintf(*destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
 
         // if directory and not self or parent, recurse
         if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
         {
             mkdir(destFullPath, 0755);
-            ExploreDir(&srcFullPath, &destFullPath, jq_ptr);
+            ExploreDir(srcFullPath, destFullPath, jq_ptr);
         }
         // if file, create copy job
         else if (entry->d_type == 8)
         {
             struct stat st;
             stat(srcFullPath, &st);
-            CreateJob(&srcFullPath, &destFullPath, st.st_size, jq_ptr); // todo: size
+            CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr);
         }
     }
 
     closedir(dir_ptr);
 }
 
-bool CreateJob(char *jobSrc, char *jobDest, int size, JobQueue *jq_ptr)
+bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
     if (job_ptr == NULL) {
