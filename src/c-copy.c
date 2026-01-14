@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
     // todo: stdin pipeline integration
 
@@ -23,13 +23,13 @@ int main(int argc, char *argv[])
 	srcdir = opendir(argv[1]);
 	if(!srcdir)
 	{
-        printf("Invalid source directory: %s", argv[1]);
+        printf("Invalid source directory: %s\n", argv[1]);
 		return -2;		//-2 indicates invalid source path
 	}
 	destdir = opendir(argv[2]);
 	if(!destdir)
 	{
-        printf("Invalid destination directory: %s", argv[2]);
+        printf("Invalid destination directory: %s\n", argv[2]);
         // maybe create instead of returning?
 		closedir(srcdir);
 		return -3;		//-3 indicates invalid destination path
