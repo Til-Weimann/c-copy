@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <c-copy-headers.h>
+#include "../include/c-copy-headers.h"
 
 int CopyFile(CopyJob *job_ptr)
 {

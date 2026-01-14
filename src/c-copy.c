@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <c-copy-headers.h>
+#include "../include/c-copy-headers.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,34 +14,30 @@ int main(int argc, char *argv[])
 
     if (argc < 3)
     {
-        printf("Usage: %s <source_path> <dest_path> [<threadCount>]\n", argv[0]);
+        printf("Usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
         return 1;
     }
 
-    y
-    char *srcPath[PATH_MAX_LEN];
-    char *destPath[PATH_MAX_LEN];
-
-	//done: read paths from arg[1] and arg[2] and check if the correlating dir exists
-	srcPath = argv[1];
-	destPath = argv[2];
 	DIR *srcdir;
 	DIR *destdir;
-	srcdir = opendir(srcPath);
+	srcdir = opendir(argv[1]);
 	if(!srcdir)
 	{
+        // print error
+        printf("Invalid source directory: ", argv[0]);
 		return -2;		//-2 indicates invalid source path
 	}
-	destdir = opendir(destPath);
+	destdir = opendir(argv[2]);
 	if(!destdir)
 	{
-		closedir(srcPath);
+        printf("Invalid destination directory: ", argv[0]);
+		closedir(argv[1]);
 		return -3;		//-3 indicates invalid destination path
 	}
 	else
 	{
-		closedir(srcPath);
-		closedir(destPath);
+		closedir(argv[1]);
+		closedir(argv[2]);
 	}
 	
 	

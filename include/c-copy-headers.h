@@ -19,9 +19,15 @@ typedef struct {
     int end;
 } JobQueue;
 
-
+// fileutils
 int CopyFile(CopyJob *job_ptr);
 
+// jobqueue
+pthread_mutex_t claim_mutex;
+void InitQueue(JobQueue *jq_ptr);
+bool IsEmpty(JobQueue *jq_ptr);
+bool IsFull(JobQueue *jq_ptr);
 bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr);
 CopyJob *ClaimJob(JobQueue *jq_ptr);
-pthread_mutex_t claim_mutex;
+
+// main
