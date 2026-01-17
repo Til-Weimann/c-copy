@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <c-copy-headers.h>
+#include "../include/c-copy-headers.h"
 #include <pthread.h>
+#include <stdlib.h>
 
 pthread_mutex_t claim_mutex;
 
@@ -37,8 +38,9 @@ bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 CopyJob *ClaimJob(JobQueue *jq_ptr)
 {
     pthread_mutex_lock(&claim_mutex);
-    if (isEmpty(jq_ptr)) {
+    if (IsEmpty(jq_ptr)) {
         printf("Queue is empty\n");
+        pthread_mutex_unlock(&claim_mutex);
         return NULL;
     }
     CopyJob *job_ptr = jq_ptr->jobs[++jq_ptr->start];
