@@ -26,7 +26,6 @@ bool IsFull(JobQueue *jq_ptr)
 bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 {
     if (IsFull(jq_ptr)) {
-        printf("Job Queue is full\n");
         free(job_ptr);
         return false;
     }

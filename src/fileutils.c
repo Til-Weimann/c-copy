@@ -4,7 +4,7 @@
 
 int CopyFile(CopyJob *job_ptr)
 {
-    //consulted with an ai to determine failiure points and add code to check for them.
+    //consulted with an ai to determine failure points and add code to check for them.
     
     if(job_ptr == NULL){return -1;}
 

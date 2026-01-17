@@ -10,7 +10,7 @@
 typedef struct {
     char srcPath[4096 + 255];
     char destPath[4096 + 255];
-    int fileSize;
+    unsigned long int fileSize; // supports 4TiB
 } CopyJob;
 
 typedef struct {
@@ -37,3 +37,10 @@ CopyJob *ClaimJob(JobQueue *jq_ptr);
 void* WorkerRoutine(void* arg);
 void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
 bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr);
+
+// progress
+extern pthread_mutex_t progress_mutex;
+extern unsigned long int bytes_total;
+extern unsigned long int bytes_done;
+extern unsigned long int bytes_failed;
+void OnJobFinished(int status, unsigned long int size);

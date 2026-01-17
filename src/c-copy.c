@@ -6,11 +6,14 @@
 #include <dirent.h>
 #include <pthread.h>
 #include <sys/stat.h>
+#include <time.h>
 
 
 int main(int argc, const char *argv[])
 {
     // todo: stdin pipeline integration
+
+    time_t start = time(NULL);
 
     if (argc < 3)
     {
@@ -61,6 +64,7 @@ int main(int argc, const char *argv[])
 
     JobQueue jq;
     InitQueue(&jq);
+    pthread_mutex_init(&progress_mutex, NULL);
 
     ExploreDir(argv[1], argv[2], &jq);
 
@@ -74,11 +78,18 @@ int main(int argc, const char *argv[])
         pthread_join(workers[i], NULL);
     }
 
+    // Leave the progress counter line
+    printf("\n");
+    fflush(stdout);
+
 
     // todo: more clean up
     pthread_mutex_destroy(&claim_mutex);
+    pthread_mutex_destroy(&progress_mutex);
 
-    // todo: stdout pipeline integration
+
+    // maybe add:  files copied: n
+    printf("Time elapsed: %.1f seconds\n", (double)(time(NULL)-start));
 
 }
 
@@ -95,11 +106,11 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
     {
         if (strlen(srcPath) + 1 + strlen(entry->d_name) > PATH_MAX_LEN)
         {
+            // todo: actually keep exploring directory so any files can be added as failed
             printf("Error: An entry exceeded maximum path length!");
             continue;
         }
 
-        // todo: unfuck strings
         char srcFullPath[PATH_MAX_LEN] = "";
         char destFullPath[PATH_MAX_LEN] = "";
 
@@ -118,7 +129,11 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
         {
             struct stat st;
             stat(srcFullPath, &st);
-            CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr);
+            bytes_total += st.st_size;
+            if (!CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr))
+            {
+                bytes_failed += st.st_size;
+            }
         }
     }
 
@@ -129,7 +144,6 @@ bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_p
 {
     CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
     if (job_ptr == NULL) {
-        printf("Job memory allocation failed.\n");
         return false;
     }
     strcpy(job_ptr->srcPath, jobSrc);
@@ -147,8 +161,8 @@ void* WorkerRoutine(void* arg) {
     while ((job_ptr = ClaimJob(jq_ptr)) != NULL)
     {
         int status = CopyFile(job_ptr);
+        OnJobFinished(status, job_ptr->fileSize);
         free(job_ptr);
-        // Optional todo: Update some shared progress/failure counter based on status and job file size
     }
     return NULL;
 }
