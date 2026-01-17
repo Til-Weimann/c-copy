@@ -37,13 +37,11 @@ bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 
 CopyJob *ClaimJob(JobQueue *jq_ptr)
 {
+    CopyJob *job_ptr = NULL;
     pthread_mutex_lock(&claim_mutex);
-    if (IsEmpty(jq_ptr)) {
-        printf("Queue is empty\n");
-        pthread_mutex_unlock(&claim_mutex);
-        return NULL;
+    if (!IsEmpty(jq_ptr)) {
+        job_ptr = jq_ptr->jobs[++jq_ptr->start];
     }
-    CopyJob *job_ptr = jq_ptr->jobs[++jq_ptr->start];
     pthread_mutex_unlock(&claim_mutex);
     return job_ptr;
 }
