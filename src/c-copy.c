@@ -113,6 +113,14 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
         if (strlen(srcPath) + 1 + strlen(entry->d_name) > PATH_MAX_LEN)
         {
             // todo: actually keep exploring directory so any files can be added as failed
+			if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        	{
+				dir_copies_failed++;
+			}
+			else if (entry->d_type == 8)
+			{
+				files_copies_failed++;
+			}
             printf("Error: An entry exceeded maximum path length!\n");
             continue;
         }
@@ -139,6 +147,7 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
             if (!CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr))
             {
                 bytes_failed += st.st_size;
+				files_copies_failed++;
             }
         }
     }
