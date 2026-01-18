@@ -10,6 +10,9 @@ unsigned long int bytes_total = 0;
 unsigned long int bytes_done = 0;
 unsigned long int bytes_failed = 0;
 
+unsigned long int files_copies_failed = 0;
+unsigned long int dir_copies_failed = 0;
+
 
 void PrintProgressUpdate()
 {
