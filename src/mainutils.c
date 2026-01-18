@@ -13,7 +13,7 @@ int VerifyArguments(int argc, const char *argv[])
     if (argc < 3 || argc > 4)
     {
         #ifndef TESTING
-        printf("Invalid argument count\nExpected usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
+        fprintf(stderr, "Invalid argument count\nExpected usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
         #endif
         return -1;
 	}
@@ -24,7 +24,7 @@ int VerifyArguments(int argc, const char *argv[])
 	if(!srcdir)
 	{
         #ifndef TESTING
-        printf("Invalid source directory: %s\n", argv[1]);
+        fprintf(stderr, "Invalid source directory: %s\n", argv[1]);
         #endif
 		return -2;		//-2 indicates invalid source path
 	}
@@ -36,7 +36,7 @@ int VerifyArguments(int argc, const char *argv[])
 		if(!destdir)
 		{
             #ifndef TESTING
-			printf("Invalid destination or failed to create directory: %s\n", argv[2]);
+			fprintf(stderr, "Invalid destination or failed to create directory: %s\n", argv[2]);
 			#endif
             closedir(srcdir);
 			return -3;		//-3 indicates invalid destination path
