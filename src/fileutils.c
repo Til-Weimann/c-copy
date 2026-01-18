@@ -6,10 +6,16 @@ int CopyFile(CopyJob *job_ptr)
 {
     //consulted with an ai to determine failure points and add code to check for them.
     
-    if(job_ptr == NULL){return -1;}
+    if(job_ptr == NULL)
+    {
+        return -1;
+    }
 
     FILE *src = fopen(job_ptr->srcPath, "rb");
-    if(!src){return -1;}
+    if(!src)
+    {
+        return -1;
+    }
 
     FILE *dst = fopen(job_ptr->destPath, "wb");
     if (!dst) 
