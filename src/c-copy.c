@@ -100,62 +100,6 @@ int main(int argc, const char *argv[])
 	return 1;
 }
 
-void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
-{
-    DIR *dir_ptr = opendir(srcPath);
-    if (dir_ptr == NULL)
-    {
-        return;
-    }
-    struct dirent *entry = NULL;
-
-    while ((entry = readdir(dir_ptr)) != NULL)
-    {
-        if (strlen(srcPath) + 1 + strlen(entry->d_name) > PATH_MAX_LEN)
-        {
-            // todo: actually keep exploring directory so any files can be added as failed
-			if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
-        	{
-				dir_copies_failed++;
-			}
-			else if (entry->d_type == 8)
-			{
-				files_copies_failed++;
-			}
-            printf("Error: An entry exceeded maximum path length!\n");
-            continue;
-        }
-
-        char srcFullPath[PATH_MAX_LEN] = "";
-        char destFullPath[PATH_MAX_LEN] = "";
-
-        // path construction approach assisted by ai
-        snprintf(srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
-        snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
-
-        // if directory and not self or parent, recurse
-        if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
-        {
-            mkdir(destFullPath, 0755);
-            ExploreDir(srcFullPath, destFullPath, jq_ptr);
-        }
-        // if file, create copy job
-        else if (entry->d_type == 8)
-        {
-            struct stat st;
-            stat(srcFullPath, &st);
-            bytes_total += st.st_size;
-            if (!CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr))
-            {
-                bytes_failed += st.st_size;
-				files_copies_failed++;
-            }
-        }
-    }
-
-    closedir(dir_ptr);
-}
-
 bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
