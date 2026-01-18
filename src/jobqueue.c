@@ -25,7 +25,8 @@ bool IsFull(JobQueue *jq_ptr)
 
 bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 {
-    if (IsFull(jq_ptr)) {
+    if (IsFull(jq_ptr)) 
+    {
         free(job_ptr);
         return false;
     }
@@ -38,7 +39,8 @@ CopyJob *ClaimJob(JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = NULL;
     pthread_mutex_lock(&claim_mutex);
-    if (!IsEmpty(jq_ptr)) {
+    if (!IsEmpty(jq_ptr)) 
+    {
         job_ptr = jq_ptr->jobs[++jq_ptr->start];
     }
     pthread_mutex_unlock(&claim_mutex);
