@@ -107,7 +107,7 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
         if (strlen(srcPath) + 1 + strlen(entry->d_name) > PATH_MAX_LEN)
         {
             // todo: actually keep exploring directory so any files can be added as failed
-            printf("Error: An entry exceeded maximum path length!");
+            printf("Error: An entry exceeded maximum path length!\n");
             continue;
         }
 
