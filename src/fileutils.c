@@ -40,14 +40,12 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
         snprintf(srcFullPath, PATH_MAX_LEN, "%s/%s", srcPath, entry->d_name);
         snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
 
-        // if directory and not self or parent, recurse
-        if (isSubdir)
+        if (isSubdir) // recurse
         {
             mkdir(destFullPath, 0755);
             ExploreDir(srcFullPath, destFullPath, jq_ptr);
         }
-        // if file, create copy job
-        else if (isFile)
+        else if (isFile) // create copy job
         {
             struct stat st;
             stat(srcFullPath, &st);

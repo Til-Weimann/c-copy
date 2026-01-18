@@ -6,14 +6,13 @@
 #include <dirent.h>
 #include <pthread.h>
 #include <sys/stat.h>
-#include <time.h>
 
 
 int VerifyArguments(int argc, const char *argv[])
 {
     if (argc < 3 || argc > 4)
     {
-        printf("Invalid count of arguments, expected usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
+        printf("Invalid argument count\nExpected usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
         return -1;
 	}
 

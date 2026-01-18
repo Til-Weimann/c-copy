@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include "../include/c-copy-headers.h"
-#include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
 #include <pthread.h>
-#include <sys/stat.h>
 #include <time.h>
 
 
@@ -18,7 +14,7 @@ int main(int argc, const char *argv[])
     if (argsValid < 0)
         return argsValid;
 
-    int threadCount = GetThreadCount(argc, argv);
+    const int threadCount = GetThreadCount(argc, argv);
 
     JobQueue jq;
     InitQueue(&jq);
@@ -38,17 +34,15 @@ int main(int argc, const char *argv[])
         pthread_join(workers[i], NULL);
     }
 
+    pthread_mutex_destroy(&claim_mutex);
+    pthread_mutex_destroy(&progress_mutex);
+
+
     // Leave the progress counter line
     printf("\n");
     fflush(stdout);
 
 
-    // todo: more clean up
-    pthread_mutex_destroy(&claim_mutex);
-    pthread_mutex_destroy(&progress_mutex);
-
-
-    // maybe add:  files copied: n
     printf("Time elapsed: %.1f seconds\n", (double)(time(NULL)-start));
     if (dirs_failed > 0 || files_failed > 0)
     {
