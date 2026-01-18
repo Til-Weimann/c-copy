@@ -2,19 +2,23 @@
 #include "../include/test-headers.h"
 #include <stdio.h>
 
-int TestQueue()
+int QueueTest1()
 {
-
-    // Add several queue tests
-    
-    if (false)
-    {
-        printf("test_queue.c - FAIL - reason\n");
-        return -1;
-    }
-
-    printf("test_queue.c - PASS\n");
+    // Implement some test here
     return 0;
 }
 
-// Also add methods
+int QueueTest2()
+{
+    // Implement some test here
+    return 0;
+}
+
+int TestQueue()
+{   
+    if (QueueTest1() <= 0 || QueueTest2() <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}

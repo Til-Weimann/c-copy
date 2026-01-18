@@ -33,6 +33,16 @@ int TestThreadCount()
 
 int TestVerifyArgs()
 {
+    if (GetThreadCount(2, (const char *[]){"1", "2", NULL}) != -1)
+    {
+        printf("FAIL - did not recognize insufficient argument count\n");
+        return -1;
+    }
+    if (GetThreadCount(5, (const char *[]){"1", "2", "3", "4", "5", NULL}) != -1)
+    {
+        printf("FAIL - did not recognize excessive argument count\n");
+        return -1;
+    }
     return 0;
 }
 
