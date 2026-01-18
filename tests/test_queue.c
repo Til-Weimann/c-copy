@@ -1,7 +1,7 @@
 #include "../include/c-copy-headers.h"
 #include <stdio.h>
 
-int main(void)
+int TestQueue(void)
 {
 
     // Add several queue tests
@@ -15,3 +15,5 @@ int main(void)
     printf("test_queue.c - PASS\n");
     return 0;
 }
+
+// Also add methods
