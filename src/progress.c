@@ -44,6 +44,7 @@ void OnJobFinished(int status, unsigned long int size)
     else
     {
         bytes_failed += size;
+        files_copies_failed++;
     }
 
     pthread_mutex_unlock(&progress_mutex);
