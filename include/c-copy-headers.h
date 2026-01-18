@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 
-#define MAX_JOBS 1000
+#define MAX_JOBS 5000
 #define PATH_MAX_LEN 4096
 
 #define NUM_THREADS_MAX 16
