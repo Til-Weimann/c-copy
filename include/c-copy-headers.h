@@ -43,4 +43,6 @@ extern pthread_mutex_t progress_mutex;
 extern unsigned long int bytes_total;
 extern unsigned long int bytes_done;
 extern unsigned long int bytes_failed;
+unsigned long int files_copies_failed;
+unsigned long int dir_copies_failed;
 void OnJobFinished(int status, unsigned long int size);
