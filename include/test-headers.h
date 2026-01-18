@@ -8,3 +8,6 @@
 int TestQueue();
 int TestFiles();
 int TestArgs();
+
+// No idea why this is needed here, it should already be included via c-copy-headers.h
+int GetThreadCount(int argc, const char *argv[]);

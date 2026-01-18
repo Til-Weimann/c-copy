@@ -16,9 +16,6 @@ unsigned long int dirs_failed = 0;
 
 void PrintProgressUpdate()
 {
-    // Files copied: 20% (failed: 0%)
-    // calculate ratios then print update
-
     if (bytes_total == 0)
     {
         return;

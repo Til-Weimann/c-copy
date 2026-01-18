@@ -65,7 +65,7 @@ int GetThreadCount(int argc, const char *argv[])
         else if (threadArg <= 0)
         {
             #ifndef TESTING
-            printf("Warning: Thread number %d is invalid, proceeding with %d.\n", threadArg, NUM_THREADS_DEFAULT);
+            printf("Warning: Thread number %s is invalid, proceeding with %d.\n", argv[3], NUM_THREADS_DEFAULT);
             #endif
         }
         else
