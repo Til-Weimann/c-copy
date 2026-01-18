@@ -3,6 +3,7 @@
 #include "../include/c-copy-headers.h"
 #include <sys/stat.h>
 #include <dirent.h>
+#include <string.h>
 
 void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
 {
@@ -29,7 +30,6 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
 			{
 				files_failed++;
 			}
-            printf("Error: An entry exceeded maximum path length!\n");
             continue;
         }
 

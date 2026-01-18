@@ -22,7 +22,10 @@ typedef struct {
 
 // make sure to update these when changing method signatures!
 
+
+
 // fileutils
+void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
 int CopyFile(CopyJob *job_ptr);
 
 // jobqueue
@@ -33,9 +36,10 @@ bool IsFull(JobQueue *jq_ptr);
 bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr);
 CopyJob *ClaimJob(JobQueue *jq_ptr);
 
-// main
+// mainutils
+int VerifyArguments(int argc, const char *argv[]);
+int GetThreadCount(int argc, const char *argv[]);
 void* WorkerRoutine(void* arg);
-void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
 bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr);
 
 // progress
