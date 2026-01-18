@@ -10,8 +10,8 @@ unsigned long int bytes_total = 0;
 unsigned long int bytes_done = 0;
 unsigned long int bytes_failed = 0;
 
-unsigned long int files_copies_failed = 0;
-unsigned long int dir_copies_failed = 0;
+unsigned long int files_failed = 0;
+unsigned long int dirs_failed = 0;
 
 
 void PrintProgressUpdate()
@@ -44,7 +44,7 @@ void OnJobFinished(int status, unsigned long int size)
     else
     {
         bytes_failed += size;
-        files_copies_failed++;
+        files_failed++;
     }
 
     pthread_mutex_unlock(&progress_mutex);

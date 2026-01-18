@@ -96,7 +96,10 @@ int main(int argc, const char *argv[])
 
     // maybe add:  files copied: n
     printf("Time elapsed: %.1f seconds\n", (double)(time(NULL)-start));
-	printf("Failed copyjobs: %d directories and %d files\n", dir_copies_failed, files_copies_failed);
+    if (dirs_failed > 0 || files_failed > 0)
+    {
+        printf("Failed to copy %d directories and %d files\n", dirs_failed, files_failed);
+    }
 	return 1;
 }
 

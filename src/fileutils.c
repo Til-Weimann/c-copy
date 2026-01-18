@@ -15,16 +15,19 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
 
     while ((entry = readdir(dir_ptr)) != NULL)
     {
+        const bool isSubdir = (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0);
+        const bool isFile = (entry->d_type == 8);
+
         if (strlen(srcPath) + 1 + strlen(entry->d_name) > PATH_MAX_LEN)
         {
             // todo: actually keep exploring directory so any files can be added as failed
-			if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+			if (isSubdir)
         	{
-				dir_copies_failed++;
+				dirs_failed++;
 			}
-			else if (entry->d_type == 8)
+			else if (isFile)
 			{
-				files_copies_failed++;
+				files_failed++;
 			}
             printf("Error: An entry exceeded maximum path length!\n");
             continue;
@@ -38,13 +41,13 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
         snprintf(destFullPath, PATH_MAX_LEN, "%s/%s", destPath, entry->d_name);
 
         // if directory and not self or parent, recurse
-        if (entry->d_type == 4 && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+        if (isSubdir)
         {
             mkdir(destFullPath, 0755);
             ExploreDir(srcFullPath, destFullPath, jq_ptr);
         }
         // if file, create copy job
-        else if (entry->d_type == 8)
+        else if (isFile)
         {
             struct stat st;
             stat(srcFullPath, &st);
@@ -52,7 +55,7 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
             if (!CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr))
             {
                 bytes_failed += st.st_size;
-				files_copies_failed++;
+				files_failed++;
             }
         }
     }
