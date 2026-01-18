@@ -9,6 +9,7 @@ int main(void)
     if (TestArgs() <= 0 && TestFiles() <= 0 && TestQueue() <= 0)
     {
         printf("PASS\n");
+        return 0;
     }
-    return 0;
+    return -1;
 }
