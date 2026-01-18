@@ -12,7 +12,9 @@ int VerifyArguments(int argc, const char *argv[])
 {
     if (argc < 3 || argc > 4)
     {
+        #ifndef TESTING
         printf("Invalid argument count\nExpected usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
+        #endif
         return -1;
 	}
 
@@ -21,7 +23,9 @@ int VerifyArguments(int argc, const char *argv[])
 	srcdir = opendir(argv[1]);
 	if(!srcdir)
 	{
+        #ifndef TESTING
         printf("Invalid source directory: %s\n", argv[1]);
+        #endif
 		return -2;		//-2 indicates invalid source path
 	}
 	destdir = opendir(argv[2]);
@@ -31,8 +35,10 @@ int VerifyArguments(int argc, const char *argv[])
 		destdir = opendir(argv[2]);
 		if(!destdir)
 		{
+            #ifndef TESTING
 			printf("Invalid destination or failed to create directory: %s\n", argv[2]);
-			closedir(srcdir);
+			#endif
+            closedir(srcdir);
 			return -3;		//-3 indicates invalid destination path
 		}
 	}
@@ -51,12 +57,16 @@ int GetThreadCount(int argc, const char *argv[])
         int threadArg = atoi(argv[3]);
         if (threadArg > NUM_THREADS_MAX)
         {
+            #ifndef TESTING
             printf("Warning: %d exceeds the thread limit of %d, proceeding with %d.\n", threadArg, NUM_THREADS_MAX, NUM_THREADS_MAX);
+            #endif
             threadCount = NUM_THREADS_MAX;
         }
         else if (threadArg <= 0)
         {
+            #ifndef TESTING
             printf("Warning: Thread number %d is invalid, proceeding with %d.\n", threadArg, NUM_THREADS_DEFAULT);
+            #endif
         }
         else
         {

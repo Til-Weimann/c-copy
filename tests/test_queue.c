@@ -1,7 +1,8 @@
 #include "../include/c-copy-headers.h"
+#include "../include/test-headers.h"
 #include <stdio.h>
 
-int TestQueue(void)
+int TestQueue()
 {
 
     // Add several queue tests

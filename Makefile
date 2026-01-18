@@ -4,6 +4,7 @@
 
 CC=gcc
 CFLAGS = -Wall -Wextra -Iinclude
+TEST_CFLAGS = -Wall -Wextra -Iinclude -DTESTING
 
 BUILD_DIR = build
 APP_DIR = $(BUILD_DIR)/c-copy
@@ -23,7 +24,7 @@ test: $(TEST_DIR)
 	./$(TEST_DIR)
 	
 $(TEST_DIR): $(TEST_FILES) $(filter-out src/c-copy.c, $(SRC_FILES)) | $(BUILD_DIR)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(TEST_CFLAGS) $^ -o $@
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)

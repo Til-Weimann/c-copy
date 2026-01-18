@@ -1,24 +1,14 @@
 #include "../include/c-copy-headers.h"
-#include "./test-headers.h"
-#include <stdio.h>
+#include "../include/test-headers.h"
 
 int main(void)
 {
 
     // From here, call the test methods of all test_subject.c files
     
-    if (false)
+    if (TestArgs() <= 0 && TestFiles() <= 0 && TestQueue() <= 0)
     {
-        printf("FAIL - reason\n");
-        return -1;
+        printf("PASS\n");
     }
-
-    if (false)
-    {
-        printf("FAIL - reason\n");
-        return -2;
-    }
-
-    printf("PASS\n");
     return 0;
 }
