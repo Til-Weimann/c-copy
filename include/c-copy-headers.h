@@ -8,7 +8,7 @@
 #define NUM_THREADS_DEFAULT 4
 
 typedef struct {
-    char srcPath[4096 + 255];
+    char srcPath[4096 + 255]; // Make change to define value
     char destPath[4096 + 255];
     unsigned long int fileSize; // supports 4TiB
 } CopyJob;
