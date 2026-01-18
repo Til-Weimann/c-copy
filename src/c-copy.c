@@ -15,11 +15,11 @@ int main(int argc, const char *argv[])
 
     time_t start = time(NULL);
 
-    if (argc < 3)
+    if (argc < 3 || argc > 4)
     {
-        printf("Usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
-        return 1;
-    }
+        printf("Invalid count of arguments, expected usage: %s <source_dir> <dest_dir> [<threadCount>]\n", argv[0]);
+        return -1;
+	}
 
 	DIR *srcdir;
 	DIR *destdir;
@@ -32,10 +32,14 @@ int main(int argc, const char *argv[])
 	destdir = opendir(argv[2]);
 	if(!destdir)
 	{
-        printf("Invalid destination directory: %s\n", argv[2]);
-        // maybe create instead of returning?
-		closedir(srcdir);
-		return -3;		//-3 indicates invalid destination path
+        mkdir(argv[2], 0755);
+		destdir = opendir(argv[2]);
+		if(!destdir)
+		{
+			printf("Invalid destination or failed to create directory: %s\n", argv[2]);
+			closedir(srcdir);
+			return -3;		//-3 indicates invalid destination path
+		}
 	}
     closedir(srcdir);
 	closedir(destdir);
@@ -44,7 +48,7 @@ int main(int argc, const char *argv[])
 	
 
     int threadCount = NUM_THREADS_DEFAULT;
-    if (argc > 3)
+    if (argc == 4)
     {
         int threadArg = atoi(argv[3]);
         if (threadArg > NUM_THREADS_MAX)
@@ -70,11 +74,13 @@ int main(int argc, const char *argv[])
 
     pthread_t workers[NUM_THREADS_MAX];
 
-    for (int i = 0; i < threadCount; i++) {
+    for (int i = 0; i < threadCount; i++) 
+	{
         pthread_create(&workers[i], NULL, WorkerRoutine, &jq);
     }
 
-    for (int i = 0; i < threadCount; i++) {
+    for (int i = 0; i < threadCount; i++) 
+	{
         pthread_join(workers[i], NULL);
     }
 
@@ -90,7 +96,7 @@ int main(int argc, const char *argv[])
 
     // maybe add:  files copied: n
     printf("Time elapsed: %.1f seconds\n", (double)(time(NULL)-start));
-
+	return 1;
 }
 
 void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
@@ -143,7 +149,8 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
 bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = (CopyJob*) malloc(sizeof(CopyJob));
-    if (job_ptr == NULL) {
+    if (job_ptr == NULL)
+	{
         return false;
     }
     strcpy(job_ptr->srcPath, jobSrc);
@@ -154,7 +161,8 @@ bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_p
 }
 
 
-void* WorkerRoutine(void* arg) {
+void* WorkerRoutine(void* arg)
+{
     JobQueue *jq_ptr = arg; 
 
     CopyJob *job_ptr;
