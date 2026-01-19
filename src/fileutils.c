@@ -54,6 +54,7 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
             {
                 bytes_failed += st.st_size;
 				files_failed++;
+				free(jq_ptr);
             }
         }
     }
