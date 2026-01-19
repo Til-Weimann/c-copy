@@ -24,11 +24,15 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
             // todo: actually keep exploring directory so any files can be added as failed
 			if (isSubdir)
         	{
+				pthread_mutex_lock(&claim_mutex);
 				dirs_failed++;
+				pthread_mutex_unlock(&claim_mutex);
 			}
 			else if (isFile)
 			{
+				pthread_mutex_lock(&claim_mutex);
 				files_failed++;
+				pthread_mutex_unlock(&claim_mutex);
 			}
             continue;
         }
@@ -52,8 +56,10 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq_ptr)
             bytes_total += st.st_size;
             if (!CreateJob(srcFullPath, destFullPath, st.st_size, jq_ptr))
             {
+				pthread_mutex_lock(&claim_mutex);
                 bytes_failed += st.st_size;
 				files_failed++;
+				pthread_mutex_unlock(&claim_mutex);
 				free(jq_ptr);
             }
         }
