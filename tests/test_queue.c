@@ -1,14 +1,22 @@
 #include "../include/c-copy-headers.h"
 #include "../include/test-headers.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int QueueTest1()
 {
     JobQueue jq;
-    InitQueue(&jq);
+    
+    InitQueue(&jq); // seg fault
+
+    return 0;
 
     CopyJob *job = malloc(sizeof(CopyJob));
-    if (!job) return -1;
+    if (job == NULL)
+    {
+        fprintf(stderr, "FAIL - job creation failed\n");
+        return -1;
+    }
 
     job->fileSize = 123;
 
@@ -26,6 +34,7 @@ int QueueTest1()
     }
 
     free(claimed);
+    pthread_mutex_destroy(&claim_mutex);
     return 0;
 }
 

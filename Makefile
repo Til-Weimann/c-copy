@@ -4,7 +4,7 @@
 
 CC=gcc
 CFLAGS = -Wall -Wextra -Iinclude
-TEST_CFLAGS = -Wall -Wextra -Iinclude -DTESTING
+TEST_CFLAGS = -Wall -Wextra -Werror -Iinclude -DTESTING
 
 BUILD_DIR = build
 APP_DIR = $(BUILD_DIR)/c-copy
