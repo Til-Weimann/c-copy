@@ -82,7 +82,7 @@ bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_p
     if (job_ptr == NULL)
 	{
         return false;
-    }
+	}
     strcpy(job_ptr->srcPath, jobSrc);
     strcpy(job_ptr->destPath, jobDest);
     job_ptr->fileSize = size;
