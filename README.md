@@ -1,5 +1,5 @@
 # c-copy
-custom copy command created in c
+custom copy command created in C
 
 
 # application usage
