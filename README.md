@@ -19,6 +19,10 @@ a live progress percentage is displayed on the command line, and the user will b
 the included makefile allows for easy building, testing and cleanup.
 ```Makefile
 make all
+```
+```Makefile
 make test
+```
+```Makefile
 make clean
 ```
