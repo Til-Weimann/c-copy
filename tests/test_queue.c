@@ -27,7 +27,7 @@ int QueueTest1()
     if (j != job_ptr)
     {
         printf("%p\n", j);
-        fprintf(stderr, "FAIL - claimed job mismatch\n");
+        fprintf(stderr, "FAIL - claimed job mismatch\n"); // todo: resolve issue
         free(job_ptr);
         return -3;
     }
