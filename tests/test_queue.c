@@ -6,34 +6,33 @@
 int QueueTest1()
 {
     JobQueue jq;
-    
-    InitQueue(&jq); // seg fault
 
-    return 0;
-
-    CopyJob *job = malloc(sizeof(CopyJob));
-    if (job == NULL)
+    CopyJob *job_ptr = malloc(sizeof(CopyJob));
+    if (job_ptr == NULL)
     {
         fprintf(stderr, "FAIL - job creation failed\n");
         return -1;
     }
 
-    job->fileSize = 123;
+    job_ptr->fileSize = 123;
 
-    if (!Enqueue(&jq, job))
+    if (!Enqueue(&jq, job_ptr))
     {
         fprintf(stderr, "FAIL - enqueue failed\n");
         return -2;
     }
+    printf("%p\n", job_ptr);
 
-    CopyJob *claimed = ClaimJob(&jq);
-    if (claimed != job)
+    CopyJob* j = ClaimJob(&jq);
+    if (j != job_ptr)
     {
+        printf("%p\n", j);
         fprintf(stderr, "FAIL - claimed job mismatch\n");
+        free(job_ptr);
         return -3;
     }
 
-    free(claimed);
+    free(job_ptr);
     pthread_mutex_destroy(&claim_mutex);
     return 0;
 }
@@ -50,6 +49,8 @@ int QueueTest2()
         fprintf(stderr, "FAIL - empty queue returned job\n");
         return -1;
     }
+
+    pthread_mutex_destroy(&claim_mutex);
 
     return 0;
 }
