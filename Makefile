@@ -1,5 +1,7 @@
 # Makefile created with consultation from ChatGPT
 
+# full auto in building!!!
+
 CC=gcc
 CFLAGS = -Wall -Wextra -Iinclude
 TEST_CFLAGS = -Wall -Wextra -Werror -Iinclude -DTESTING

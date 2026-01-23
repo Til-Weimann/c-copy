@@ -65,13 +65,13 @@ int CopyFile(CopyJob *job_ptr)
 {
     //consulted with an ai to determine failure points and add code to check for them.
     
-    if(job_ptr == NULL)
+    if (job_ptr == NULL)
     {
         return -1;
     }
 
     FILE *src = fopen(job_ptr->srcPath, "rb");
-    if(!src)
+    if (!src)
     {
         return -1;
     }
@@ -87,7 +87,7 @@ int CopyFile(CopyJob *job_ptr)
     size_t bytesRead;
     int totalBytes = 0;
 
-    while((bytesRead = fread(buffer, 1, sizeof(buffer), src)) > 0) 
+    while ((bytesRead = fread(buffer, 1, sizeof(buffer), src)) > 0) 
     {
         size_t bytesWritten = fwrite(buffer, 1, bytesRead, dst);
         if (bytesWritten != bytesRead) 
@@ -99,7 +99,7 @@ int CopyFile(CopyJob *job_ptr)
         totalBytes += (int) bytesWritten;
     }
 
-    if(ferror(src)) 
+    if (ferror(src)) 
     {
         fclose(src);
         fclose(dst);

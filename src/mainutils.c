@@ -26,7 +26,7 @@ int VerifyArguments(int argc, const char *argv[])
         #ifndef TESTING
         fprintf(stderr, "Invalid source directory: %s\n", argv[1]);
         #endif
-		return -2;		//-2 indicates invalid source path
+		return -2;
 	}
 	destdir = opendir(argv[2]);
 	if(!destdir)
@@ -39,7 +39,7 @@ int VerifyArguments(int argc, const char *argv[])
 			fprintf(stderr, "Invalid destination or failed to create directory: %s\n", argv[2]);
 			#endif
             closedir(srcdir);
-			return -3;		//-3 indicates invalid destination path
+			return -3;
 		}
 	}
     closedir(srcdir);

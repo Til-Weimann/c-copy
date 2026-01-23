@@ -5,7 +5,7 @@
 #define PATH_MAX_LEN 4096 + 255
 
 #define NUM_THREADS_MAX 16
-#define NUM_THREADS_DEFAULT 4
+#define NUM_THREADS_DEFAULT 1
 
 typedef struct {
     char srcPath[PATH_MAX_LEN];

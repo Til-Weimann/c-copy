@@ -8,7 +8,7 @@
 int main(int argc, const char *argv[])
 {
 
-    time_t start = time(NULL);
+    clock_t start = clock();
 
     int argsValid = VerifyArguments(argc, argv);
     if (argsValid < 0)
@@ -45,7 +45,8 @@ int main(int argc, const char *argv[])
     fflush(stdout);
 
 
-    printf("Time elapsed: %.2f seconds\n", (double)(time(NULL)-start));
+    float timePassed = (float)(clock()-start) / CLOCKS_PER_SEC;
+    printf("Time elapsed: %0.2f seconds\n", timePassed);
     if (dirs_failed > 0 || files_failed > 0)
     {
         printf("Failed to copy %lu directories and %lu files\n", dirs_failed, files_failed);
