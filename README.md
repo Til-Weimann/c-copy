@@ -32,5 +32,5 @@ usage of coding assistants has been marked in code with comments. summary:
 - makefile was created with significant consultation from chatgpt
 - in test-headers.h, a short macro recommended by chatgpt is defined
 - in a some cases, chatgpt was used to answer general C questions (not to generate specific implementations unless listed otherwise)
-- in copyfile(), an ai assistant was used to identify possible failure points
-- in exploredir(), an ai assistant recommended usage of snprintf for path reconstruction
+- in copyfile(), chatgpt was used to identify possible failure points
+- in exploredir(), chatgpt recommended usage of snprintf for path reconstruction
