@@ -8,9 +8,9 @@
 #define NUM_THREADS_DEFAULT 1
 
 typedef struct {
-    char srcPath[PATH_MAX_LEN];
-    char destPath[PATH_MAX_LEN];
-    unsigned long int fileSize; // supports 4TiB
+    char src_path[PATH_MAX_LEN];
+    char dest_path[PATH_MAX_LEN];
+    unsigned long int file_size; // supports 4TiB
 } CopyJob;
 
 typedef struct {
@@ -24,7 +24,7 @@ typedef struct {
 // make sure to update these when changing method signatures!
 
 // fileutils
-void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
+void ExploreDir(const char *src_path, const char *dest_path, JobQueue *jq_ptr);
 int CopyFile(CopyJob *job_ptr);
 
 // jobqueue
@@ -38,7 +38,7 @@ CopyJob *ClaimJob(JobQueue *jq_ptr);
 int VerifyArguments(int argc, const char *argv[]);
 int GetThreadCount(int argc, const char *argv[]);
 void* WorkerRoutine(void* arg);
-bool CreateJob(const char *jobSrc, const char *jobDest, int size, JobQueue *jq_ptr);
+bool CreateJob(const char *job_src, const char *job_dest, int size, JobQueue *jq_ptr);
 
 // progress
 extern pthread_mutex_t progress_mutex;

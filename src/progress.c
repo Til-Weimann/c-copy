@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include "../include/c-copy-headers.h"
-#include <pthread.h>
 #include <stdlib.h>
 
 pthread_mutex_t progress_mutex;
@@ -21,10 +19,10 @@ void PrintProgressUpdate()
         return;
     }
 
-    float progressRate = 100 * (bytes_done + bytes_failed) / bytes_total;
-    float failureRate = 100 * bytes_failed / bytes_total;
+    float progress_rate = 100 * (bytes_done + bytes_failed) / bytes_total;
+    float failure_rate = 100 * bytes_failed / bytes_total;
 
-    printf("\rProgress: %0.1f%% (%0.1f%% failed)", progressRate, failureRate);
+    printf("\rProgress: %0.1f%% (%0.1f%% failed)", progress_rate, failure_rate);
     fflush(stdout);
 
     // This requires that nothing else is printed during the copy phase!

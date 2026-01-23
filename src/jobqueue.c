@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include "../include/c-copy-headers.h"
-#include <pthread.h>
 #include <stdlib.h>
 
 void InitQueue(JobQueue *jq_ptr)

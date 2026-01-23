@@ -17,7 +17,7 @@ int QueueTest1()
         return -1;
     }
 
-    job_ptr->fileSize = 123;
+    job_ptr->file_size = 123;
 
     if (!Enqueue(jq_ptr, job_ptr))
     {
