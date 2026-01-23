@@ -2,14 +2,14 @@
 #include <pthread.h>
 
 #define MAX_JOBS 5000
-#define PATH_MAX_LEN 4096
+#define PATH_MAX_LEN 4096 + 255
 
 #define NUM_THREADS_MAX 16
 #define NUM_THREADS_DEFAULT 4
 
 typedef struct {
-    char srcPath[4096 + 255]; // Make change to define value
-    char destPath[4096 + 255];
+    char srcPath[PATH_MAX_LEN];
+    char destPath[PATH_MAX_LEN];
     unsigned long int fileSize; // supports 4TiB
 } CopyJob;
 
@@ -22,8 +22,6 @@ typedef struct {
 
 
 // make sure to update these when changing method signatures!
-
-
 
 // fileutils
 void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
