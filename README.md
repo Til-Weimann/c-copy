@@ -10,9 +10,13 @@ custom copy command created in C
 
 all files and directories within source_dir will be copied to dest_dir.
 
-while wall-clock time usually depends more on I/O wait than CPU time, the program does support multi-threaded copying. the default thread count is 4.
-
 a live progress percentage is displayed on the command line, and the user will be notified if some files could not be copied.
+
+the program supports multi-threaded copying, however the default thread count is 1 because multi threaded copying is not benefitial under normal circumstances:
+- wall-clock time for such operations is highly I/O-bound, not CPU-bound
+- most storage media are faster when reading/writing sequentially
+
+however, under unusual circumstances (e. g. use of a RAM drive), these caveats might not apply. the threading feature can also be used to demonstrate or quantify these considerations for educational purposes.
 
 # building
 
