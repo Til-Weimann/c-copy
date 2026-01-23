@@ -2,7 +2,7 @@
 custom copy command created in C
 
 
-# application usage
+# usage
 
 ```
 ./c-copy <source_dir> <dest_dir> [<thread_count>]
