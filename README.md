@@ -16,7 +16,7 @@ the program supports multi-threaded copying, however the default thread count is
 - wall-clock time for such operations is highly I/O-bound, not CPU-bound
 - most storage media are faster when reading/writing sequentially
 
-however, under unusual circumstances (e. g. use of a RAM drive), these caveats might not apply. the threading feature can also be used to demonstrate or quantify these considerations for educational purposes.
+however in some cases (e. g. use of a RAM drive), these caveats might not apply. the threading feature can also be used to demonstrate or quantify these considerations for educational purposes.
 
 # building
 
