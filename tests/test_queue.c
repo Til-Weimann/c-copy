@@ -13,6 +13,7 @@ int QueueTest1()
     if (job_ptr == NULL)
     {
         fprintf(stderr, "FAIL - job creation failed\n");
+        pthread_mutex_destroy(&jq_ptr->mutex);
         return -1;
     }
 
@@ -21,6 +22,7 @@ int QueueTest1()
     if (!Enqueue(jq_ptr, job_ptr))
     {
         fprintf(stderr, "FAIL - enqueue failed\n");
+        pthread_mutex_destroy(&jq_ptr->mutex);
         return -2;
     }
 
@@ -28,6 +30,7 @@ int QueueTest1()
     if (j != job_ptr)
     {
         fprintf(stderr, "FAIL - claimed job mismatch\n");
+        pthread_mutex_destroy(&jq_ptr->mutex);
         free(job_ptr);
         return -3;
     }
@@ -48,6 +51,7 @@ int QueueTest2()
     if (job != NULL)
     {
         fprintf(stderr, "FAIL - empty queue returned job\n");
+        pthread_mutex_destroy(&jq_ptr->mutex);
         return -1;
     }
 
