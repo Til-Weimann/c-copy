@@ -23,6 +23,8 @@ int main(int argc, const char *argv[])
     pthread_mutex_init(&progress_mutex, NULL);
 
     ExploreDir(argv[1], argv[2], jq_ptr);
+    
+    PrintProgressUpdate();
 
     pthread_t workers[NUM_THREADS_MAX];
 
