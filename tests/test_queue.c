@@ -6,6 +6,8 @@
 int QueueTest1()
 {
     JobQueue jq;
+    JobQueue *jq_ptr = &jq;
+    InitQueue(jq_ptr);
 
     CopyJob *job_ptr = malloc(sizeof(CopyJob));
     if (job_ptr == NULL)
@@ -16,24 +18,22 @@ int QueueTest1()
 
     job_ptr->fileSize = 123;
 
-    if (!Enqueue(&jq, job_ptr))
+    if (!Enqueue(jq_ptr, job_ptr))
     {
         fprintf(stderr, "FAIL - enqueue failed\n");
         return -2;
     }
-    printf("%p\n", job_ptr);
 
-    CopyJob* j = ClaimJob(&jq);
+    CopyJob* j = ClaimJob(jq_ptr);
     if (j != job_ptr)
     {
-        printf("%p\n", j);
-        fprintf(stderr, "FAIL - claimed job mismatch\n"); // todo: resolve issue
+        fprintf(stderr, "FAIL - claimed job mismatch\n");
         free(job_ptr);
         return -3;
     }
 
     free(job_ptr);
-    pthread_mutex_destroy(&claim_mutex);
+    pthread_mutex_destroy(&jq_ptr->mutex);
     return 0;
 }
 
@@ -41,16 +41,17 @@ int QueueTest1()
 int QueueTest2()
 {
     JobQueue jq;
-    InitQueue(&jq);
+    JobQueue *jq_ptr = &jq;
+    InitQueue(jq_ptr);
 
-    CopyJob *job = ClaimJob(&jq);
+    CopyJob *job = ClaimJob(jq_ptr);
     if (job != NULL)
     {
         fprintf(stderr, "FAIL - empty queue returned job\n");
         return -1;
     }
 
-    pthread_mutex_destroy(&claim_mutex);
+    pthread_mutex_destroy(&jq_ptr->mutex);
 
     return 0;
 }

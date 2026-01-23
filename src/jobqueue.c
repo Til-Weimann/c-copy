@@ -4,13 +4,11 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-pthread_mutex_t claim_mutex;
-
 void InitQueue(JobQueue *jq_ptr)
 {
     jq_ptr->start = -1;
     jq_ptr->end = 0;
-    pthread_mutex_init(&claim_mutex, NULL);
+    pthread_mutex_init(&jq_ptr->mutex, NULL);
 }
 
 bool IsEmpty(JobQueue *jq_ptr)
@@ -25,7 +23,7 @@ bool IsFull(JobQueue *jq_ptr)
 
 bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 {
-    if (IsFull(jq_ptr)) 
+    if (IsFull(jq_ptr))
     {
         return false;
     }
@@ -37,11 +35,11 @@ bool Enqueue(JobQueue *jq_ptr, CopyJob *job_ptr)
 CopyJob *ClaimJob(JobQueue *jq_ptr)
 {
     CopyJob *job_ptr = NULL;
-    pthread_mutex_lock(&claim_mutex);
+    pthread_mutex_lock(&jq_ptr->mutex);
     if (!IsEmpty(jq_ptr)) 
     {
         job_ptr = jq_ptr->jobs[++jq_ptr->start];
     }
-    pthread_mutex_unlock(&claim_mutex);
+    pthread_mutex_unlock(&jq_ptr->mutex);
     return job_ptr;
 }

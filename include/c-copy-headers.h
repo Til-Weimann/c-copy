@@ -17,6 +17,7 @@ typedef struct {
     CopyJob *jobs[MAX_JOBS];
     int start;
     int end;
+    pthread_mutex_t mutex;
 } JobQueue;
 
 
@@ -29,7 +30,6 @@ void ExploreDir(const char *srcPath, const char *destPath, JobQueue *jq);
 int CopyFile(CopyJob *job_ptr);
 
 // jobqueue
-extern pthread_mutex_t claim_mutex;
 void InitQueue(JobQueue *jq_ptr);
 bool IsEmpty(JobQueue *jq_ptr);
 bool IsFull(JobQueue *jq_ptr);
